@@ -43,8 +43,6 @@ type DatabaseObjectToPost struct {
 }
 
 func main() {
-	fmt.Println("Hello world")
-
 	url := "https://api.open-meteo.com/v1/forecast?latitude=33.4148&longitude=-111.9093&daily=temperature_2m_max,temperature_2m_min&hourly=temperature_2m&timezone=auto&forecast_days=14&temperature_unit=fahrenheit"
 
 	resp, err := http.Get(url)
@@ -111,5 +109,4 @@ func main() {
 			return
 		}
 	}
-
 }
