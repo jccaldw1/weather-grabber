@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 
@@ -48,14 +49,14 @@ func main() {
 	resp, err := http.Get(url)
 
 	if err != nil {
-		fmt.Println("Error fetching reqeust: ", err)
+		log.Fatal("Error fetching reqeust: ", err)
 		return
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("Error reading response: ", err)
+		log.Fatal("Error reading response: ", err)
 		return
 	}
 
@@ -64,7 +65,7 @@ func main() {
 	err = json.Unmarshal([]byte(body), &weatherResponse)
 
 	if err != nil {
-		fmt.Println("Error unmarshalling response")
+		log.Fatal("Error unmarshalling response")
 		return
 	}
 
@@ -89,13 +90,13 @@ func main() {
 	connStr := os.Getenv("CONNECTION_STRING")
 
 	if connStr == "" {
-		fmt.Println("No connectionstring")
+		log.Fatal("No connectionstring")
 		return
 	}
 
 	db, err := sql.Open("pgx", connStr)
 	if err != nil {
-		fmt.Println("Could not open database :(", err)
+		log.Fatal("Could not open database :(", err)
 		return
 	}
 	defer db.Close()
@@ -105,7 +106,7 @@ func main() {
 	for i := 0; i < len(databaseObjectList); i++ {
 		_, err := db.Exec(query, databaseObjectList[i].Date, databaseObjectList[i].High, databaseObjectList[i].Low, databaseObjectList[i].DaysAhead)
 		if err != nil {
-			fmt.Println("Insert did not succeed: ", err)
+			log.Fatal("Insert did not succeed: ", err)
 			return
 		}
 	}
