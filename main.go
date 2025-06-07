@@ -31,6 +31,13 @@ type WeatherResponse struct {
 	Daily                DailyResults `json:"daily"`
 }
 
+type DatabaseObjectToPost struct {
+	Date      string
+	High      float32
+	Low       float32
+	DaysAhead int
+}
+
 func main() {
 	fmt.Println("Hello world")
 
@@ -60,4 +67,20 @@ func main() {
 	}
 
 	fmt.Printf("Response: %+v\n", weatherResponse)
+
+	var databaseObjectList []DatabaseObjectToPost
+
+	for i := 0; i < len(weatherResponse.Daily.Time); i++ {
+		var databaseObject DatabaseObjectToPost
+		databaseObject.Date = weatherResponse.Daily.Time[i]
+		databaseObject.DaysAhead = i
+		databaseObject.High = weatherResponse.Daily.Temperature_2m_Max[i]
+		databaseObject.Low = weatherResponse.Daily.Temperature_2m_Min[i]
+
+		databaseObjectList = append(databaseObjectList, databaseObject)
+	}
+
+	for i := 0; i < len(databaseObjectList); i++ {
+		fmt.Printf("Database object: %+v\n", databaseObjectList[i])
+	}
 }
