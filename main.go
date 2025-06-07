@@ -7,6 +7,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+
+	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
 type DailyUnits struct {
@@ -95,9 +97,19 @@ func main() {
 
 	db, err := sql.Open("pgx", connStr)
 	if err != nil {
-		fmt.Println("Could not open database :(")
+		fmt.Println("Could not open database :(", err)
 		return
 	}
 	defer db.Close()
+
+	query := `INSERT INTO "WeatherRecord" (date, high, low, days_ahead) VALUES ($1, $2, $3, $4)`
+
+	for i := 0; i < len(databaseObjectList); i++ {
+		_, err := db.Exec(query, databaseObjectList[i].Date, databaseObjectList[i].High, databaseObjectList[i].Low, databaseObjectList[i].DaysAhead)
+		if err != nil {
+			fmt.Println("Insert did not succeed: ", err)
+			return
+		}
+	}
 
 }
