@@ -1,10 +1,12 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"os"
 )
 
 type DailyUnits struct {
@@ -83,4 +85,19 @@ func main() {
 	for i := 0; i < len(databaseObjectList); i++ {
 		fmt.Printf("Database object: %+v\n", databaseObjectList[i])
 	}
+
+	connStr := os.Getenv("CONNECTION_STRING")
+
+	if connStr == "" {
+		fmt.Println("No connectionstring")
+		return
+	}
+
+	db, err := sql.Open("pgx", connStr)
+	if err != nil {
+		fmt.Println("Could not open database :(")
+		return
+	}
+	defer db.Close()
+
 }
