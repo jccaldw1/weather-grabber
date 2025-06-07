@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
@@ -101,10 +102,11 @@ func main() {
 	}
 	defer db.Close()
 
-	query := `INSERT INTO "WeatherRecord" (date, high, low, days_ahead) VALUES ($1, $2, $3, $4)`
+	query := `INSERT INTO "WeatherRecord" (date, high, low, days_ahead, date_recorded) VALUES ($1, $2, $3, $4, $5)`
+	year, month, day := time.Now().Date()
 
 	for i := 0; i < len(databaseObjectList); i++ {
-		_, err := db.Exec(query, databaseObjectList[i].Date, databaseObjectList[i].High, databaseObjectList[i].Low, databaseObjectList[i].DaysAhead)
+		_, err := db.Exec(query, databaseObjectList[i].Date, databaseObjectList[i].High, databaseObjectList[i].Low, databaseObjectList[i].DaysAhead, fmt.Sprintf("%d-%d-%d", year, int(month), day))
 		if err != nil {
 			log.Fatal("Insert did not succeed: ", err)
 			return
