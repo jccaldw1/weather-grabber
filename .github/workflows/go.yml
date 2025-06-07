@@ -1,0 +1,24 @@
+name: Daily Go Job
+
+on:
+  schedule:
+    - cron: '0 12 * * *' # Every day at 00:00 UTC
+  workflow_dispatch:     # Optional: lets you trigger it manually
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+
+      - name: Run Go script
+        env:
+          MY_SECRET: ${{ secrets.MY_SECRET }}
+        run: go run main.go
