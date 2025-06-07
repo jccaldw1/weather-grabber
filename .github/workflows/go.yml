@@ -20,5 +20,5 @@ jobs:
 
       - name: Run Go script
         env:
-          CONNECTIONffff_STRING: ${{ secrets.CONNECTION_STRING }}
+          CONNECTION_STRING: ${{ secrets.CONNECTION_STRING }}
         run: go run main.go
