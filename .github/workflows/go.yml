@@ -2,7 +2,7 @@ name: Daily Go Job
 
 on:
   schedule:
-    - cron: '0 12 * * *' # Every day at 00:00 UTC
+    - cron: '0 12 * * *' 
   workflow_dispatch:     # Optional: lets you trigger it manually
 
 jobs:
